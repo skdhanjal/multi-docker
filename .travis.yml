@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t skdhanjal/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true skdhanjal/react-test npm test
+
+after_success:
+  - docker build -t skdhanjal/multi-client ./client
+  - docker build -t skdhanjal/multi-nginx ./nginx
+  - docker build -t skdhanjal/multi-server ./server
+  - docker build -t skdhanjal/multi-worker ./worker
